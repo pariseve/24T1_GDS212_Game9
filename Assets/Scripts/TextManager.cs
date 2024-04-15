@@ -9,6 +9,9 @@ public class TextManager : MonoBehaviour
     public TextMeshProUGUI niceText;
     public TextMeshProUGUI badText;
 
+    public TextMeshProUGUI directionText;
+    public TextMeshProUGUI wrongDirectionText;
+
     private void Awake()
     {
         perfectText.gameObject.SetActive(false);
@@ -26,5 +29,10 @@ public class TextManager : MonoBehaviour
     public void BadTextActive()
     {
         badText.gameObject.SetActive(true);
+    }
+
+    public void SetDirectionText(string direction)
+    {
+        directionText.text = "Stir " + direction; 
     }
 }

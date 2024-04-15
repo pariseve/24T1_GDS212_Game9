@@ -18,16 +18,18 @@ public class BarMovement : MonoBehaviour
 
     private bool isStopped = false;
 
-    TextManager textManager;
+    private Animator animator;
+    private TextManager textManager;
 
     private void Awake()
     {
-        textManager = FindAnyObjectByType<TextManager>();
+        textManager = FindObjectOfType<TextManager>();
+        animator = GameObject.Find("Paws + Egg Sprite").GetComponent<Animator>(); 
 
         movePoints = new Transform[movement.transform.childCount];
-        for (int i = 0; i < movement.gameObject.transform.childCount; i++)
+        for (int i = 0; i < movement.transform.childCount; i++)
         {
-            movePoints[i] = movement.transform.GetChild(i).gameObject.transform;
+            movePoints[i] = movement.transform.GetChild(i);
         }
     }
 
@@ -35,7 +37,7 @@ public class BarMovement : MonoBehaviour
     {
         pointCount = movePoints.Length;
         pointIndex = 1;
-        targetPoints = movePoints[pointIndex].transform.position;
+        targetPoints = movePoints[pointIndex].position;
     }
 
     private void Update()
@@ -70,7 +72,7 @@ public class BarMovement : MonoBehaviour
         }
 
         pointIndex += direction;
-        targetPoints = movePoints[pointIndex].transform.position;
+        targetPoints = movePoints[pointIndex].position;
     }
 
     private void CheckStoppingArea()
@@ -84,6 +86,7 @@ public class BarMovement : MonoBehaviour
                 Debug.Log("Stopped over Perfect Area! You nailed it!");
                 // Add actions for stopping over the perfect area
                 textManager.PerfectTextActive();
+                animator.SetBool("isCompleted", true); 
                 return;
             }
             else if (niceAreas.Contains(collider.gameObject))
@@ -91,6 +94,7 @@ public class BarMovement : MonoBehaviour
                 Debug.Log("Stopped over Nice Area. Good job!");
                 // Add actions for stopping over the nice area
                 textManager.NiceTextActive();
+                animator.SetBool("isCompleted", true); 
                 return;
             }
             else if (badAreas.Contains(collider.gameObject))
@@ -98,6 +102,7 @@ public class BarMovement : MonoBehaviour
                 Debug.Log("Stopped over Bad Area. Oops!");
                 // Add actions for stopping over the bad area
                 textManager.BadTextActive();
+                animator.SetBool("isCompleted", true);
                 return;
             }
         }
