@@ -3,12 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Perfect
+  - Nice
+  - Bad
+  - Indicator
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Indicator
   - Water
   - UI
   - 
