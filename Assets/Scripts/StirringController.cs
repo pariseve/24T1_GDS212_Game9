@@ -4,12 +4,12 @@ public class StirringController : MonoBehaviour
 {
     public float maxStirringSpeed = 10f;
     public float stirringAcceleration = 5f;
-    public float friction = 2f;
     public float directionChangeThreshold = 0.5f; // Threshold to change direction (in seconds)
     public float directionChangeDelay = 2f; // Delay before changing direction (in seconds)
 
     public enum StirringDirection { Clockwise, CounterClockwise }
-    public StirringDirection[] stirringDirections; // List of stirring directions
+
+    private bool isClockWise = true;
 
     public TextManager textManager; // Reference to the TextManager script for displaying UI
 
@@ -17,10 +17,12 @@ public class StirringController : MonoBehaviour
     private Vector2 lastMousePos;
     private int currentDirectionIndex = 0;
     private float timeSinceDirectionChange = 0f;
+    StirringDirection expectedDirection;
+
 
     void Start()
     {
-        UpdateStirringDirectionUI();
+        ChangeDirection();
     }
 
     void Update()
@@ -49,7 +51,7 @@ public class StirringController : MonoBehaviour
             float rotationAngle = Mathf.Atan2(stirringDirection.y, stirringDirection.x) * Mathf.Rad2Deg;
 
             // Smoothly rotate the object towards the desired angle
-            Quaternion targetRotation = Quaternion.Euler(0f, 0f, rotationAngle);
+            Quaternion targetRotation = Quaternion.Euler(0f, 0f, rotationAngle - 90f);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, stirringSpeed * Time.deltaTime);
 
             // Update last mouse position
@@ -70,19 +72,18 @@ public class StirringController : MonoBehaviour
 
     void ChangeDirection()
     {
-        // Change to the next direction in the list
-        currentDirectionIndex = (currentDirectionIndex + 1) % stirringDirections.Length;
-
+        isClockWise = !isClockWise;
+        expectedDirection = isClockWise ? StirringDirection.Clockwise : StirringDirection.CounterClockwise;
         UpdateStirringDirectionUI(); // Update UI with new stirring direction
     }
 
     void CheckStirringDirection()
     {
         // Get the current stirring direction
-        StirringDirection currentDirection = stirringDirections[currentDirectionIndex];
+        StirringDirection currentDirection = CalculateStirringDirection();
 
         // Calculate the expected stirring direction based on the current rotation of the object
-        StirringDirection expectedDirection = CalculateExpectedDirection();
+
 
         // Check if the actual stirring direction matches the expected direction
         if (currentDirection != expectedDirection)
@@ -96,37 +97,30 @@ public class StirringController : MonoBehaviour
             textManager.wrongDirectionText.gameObject.SetActive(false);
         }
     }
+    private float previousDirection = 0f;
 
-    StirringDirection CalculateExpectedDirection()
+
+    StirringDirection CalculateStirringDirection()
     {
         // Get the rotation angle of the object
         float currentRotation = transform.eulerAngles.z;
 
-        // Determine the expected stirring direction based on the rotation angle
-        if (currentRotation < 0f)
+        if(currentRotation > previousDirection)
         {
-            // Normalize the rotation angle to be within [0, 360) degrees
-            currentRotation += 360f;
-        }
-
-        // Define the threshold angle for clockwise stirring (90 degrees)
-        float clockwiseThreshold = 90f;
-
-        // Determine the expected stirring direction based on the rotation angle
-        if (currentRotation < clockwiseThreshold || currentRotation >= 360f - clockwiseThreshold)
-        {
-            return StirringDirection.Clockwise;
+            previousDirection = currentRotation;
+            return StirringDirection.CounterClockwise;
         }
         else
         {
-            return StirringDirection.CounterClockwise;
+            previousDirection = currentRotation;
+            return StirringDirection.Clockwise;
         }
     }
 
     void UpdateStirringDirectionUI()
     {
         // Update UI to display the current stirring direction
-        StirringDirection currentDirection = stirringDirections[currentDirectionIndex];
+        StirringDirection currentDirection = expectedDirection;
         if (currentDirection == StirringDirection.Clockwise)
         {
             textManager.SetDirectionText("Clockwise");

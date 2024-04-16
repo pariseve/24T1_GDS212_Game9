@@ -5,12 +5,15 @@ using TMPro;
 
 public class TextManager : MonoBehaviour
 {
+    [Header("Outcome Text")]
     public TextMeshProUGUI perfectText;
     public TextMeshProUGUI niceText;
     public TextMeshProUGUI badText;
-
+    [Header("Stirring Minigame")]
     public TextMeshProUGUI directionText;
     public TextMeshProUGUI wrongDirectionText;
+    [Header("Score Text")]
+    public TextMeshProUGUI finalScoreText;
 
     private void Awake()
     {

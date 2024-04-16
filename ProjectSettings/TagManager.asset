@@ -8,6 +8,7 @@ TagManager:
   - Nice
   - Bad
   - Indicator
+  - Target Area
   layers:
   - Default
   - TransparentFX
