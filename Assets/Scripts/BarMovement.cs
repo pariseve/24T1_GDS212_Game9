@@ -21,6 +21,8 @@ public class BarMovement : MonoBehaviour
     private Animator animator;
     private TextManager textManager;
 
+    TutorialScript tutorial;
+
     private void Awake()
     {
         textManager = FindObjectOfType<TextManager>();

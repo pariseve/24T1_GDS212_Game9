@@ -9,21 +9,23 @@ public class TutorialScript : MonoBehaviour
 
     private GameObject currentUI; // Variable to hold the reference to the currently active tutorial UI
 
-    void Start()
+    public void FirstTutorial()
     {
-        // Set the initial currentUI based on whichever tutorial UI is active at the start
-        if (Tutorial1.activeSelf)
-        {
-            currentUI = Tutorial1;
-        }
-        else if (Tutorial2.activeSelf)
-        {
-            currentUI = Tutorial2;
-        }
-        else if (Tutorial3.activeSelf)
-        {
-            currentUI = Tutorial3;
-        }
+        Tutorial1.gameObject.SetActive(true);
+        currentUI = Tutorial1;
+        PauseGame();
+    }
+    public void SecondTutorial()
+    {
+        Tutorial2.gameObject.SetActive(true);
+        currentUI = Tutorial2;
+        PauseGame();
+    }
+    public void ThirdTutorial()
+    {
+        Tutorial3.gameObject.SetActive(true);
+        currentUI = Tutorial3;
+        PauseGame();
     }
 
     public void DeactivateTutorialUI()
@@ -31,6 +33,17 @@ public class TutorialScript : MonoBehaviour
         if (currentUI != null)
         {
             currentUI.SetActive(false); // Deactivate the current tutorial UI
+            ResumeGame();
         }
+    }
+
+    private void PauseGame()
+    {
+        Time.timeScale = 0f; 
+    }
+
+    private void ResumeGame()
+    {
+        Time.timeScale = 1f; 
     }
 }

@@ -103,7 +103,7 @@ public class TargetArea : MonoBehaviour
             Debug.Log($"Chosen Target Position: {targetPoints}");
 
             // Remove the selected index from the list of available indices to avoid selecting it again
-            availableIndices.RemoveAt(randomIndex);
+            //availableIndices.RemoveAt(randomIndex);
         }
         else
         {
