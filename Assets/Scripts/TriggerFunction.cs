@@ -7,7 +7,7 @@ public class TriggerFunction : MonoBehaviour
 {
     public UnityEvent function;
     
-    void LoadFunction()
+    public void LoadFunction()
     {
         function.Invoke();
     }

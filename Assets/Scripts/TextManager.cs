@@ -36,6 +36,17 @@ public class TextManager : MonoBehaviour
 
     public void SetDirectionText(string direction)
     {
+        directionText.gameObject.SetActive(true);
         directionText.text = "Stir " + direction; 
     }
+
+    public void SetAllTextInactive()
+    {
+        perfectText.gameObject.SetActive(false);
+        niceText.gameObject.SetActive(false);
+        badText.gameObject.SetActive(false);
+        directionText.gameObject.SetActive(false);
+        wrongDirectionText.gameObject.SetActive(false);
+    }
+
 }

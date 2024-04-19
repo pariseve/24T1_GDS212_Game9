@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class StirringController : MonoBehaviour
@@ -20,9 +21,17 @@ public class StirringController : MonoBehaviour
     StirringDirection expectedDirection;
 
 
+    GameTransitions transitions;
+    private float endMinigame = 2f;
+
+    [SerializeField]private float gameTimer = 30f;
+
+
     void Start()
     {
         ChangeDirection();
+
+        transitions = FindObjectOfType<GameTransitions>();
     }
 
     void Update()
@@ -67,6 +76,12 @@ public class StirringController : MonoBehaviour
                 ChangeDirection();
                 timeSinceDirectionChange = 0f; // Reset time since direction change
             }
+        }
+
+        gameTimer -= Time.deltaTime;
+        if(gameTimer < 0f)
+        {
+            StartCoroutine(transitionWait());
         }
     }
 
@@ -129,5 +144,13 @@ public class StirringController : MonoBehaviour
         {
             textManager.SetDirectionText("Counter-clockwise");
         }
+    }
+
+    private IEnumerator transitionWait()
+    {
+        yield return new WaitForSecondsRealtime(endMinigame);
+        textManager.SetAllTextInactive();
+
+        transitions.TransitionToThirdGame();
     }
 }

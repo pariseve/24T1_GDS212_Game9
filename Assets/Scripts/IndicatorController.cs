@@ -14,6 +14,16 @@ public class IndicatorController : MonoBehaviour
     public Transform targetArea;
     private bool isOverTarget = false;
 
+    GameTransitions transitions;
+    private float endMinigame = 2f;
+
+    [SerializeField] private float gameTimer = 30f;
+
+    private void Start()
+    {
+        transitions = FindObjectOfType<GameTransitions>();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -46,6 +56,12 @@ public class IndicatorController : MonoBehaviour
             // Do something when the indicator is not within the target area
             Debug.Log("Indicator is not within the target area.");
         }
+
+        gameTimer -= Time.deltaTime;
+        if (gameTimer < 0f)
+        {
+            StartCoroutine(transitionWait());
+        }
     }
 
     private bool IsIndicatorWithinTargetArea()
@@ -70,5 +86,12 @@ public class IndicatorController : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, minPos.position, moveBackSpeedMin * Time.deltaTime);
             yield return null;
         }
+    }
+
+    private IEnumerator transitionWait()
+    {
+        yield return new WaitForSecondsRealtime(endMinigame);
+
+        transitions.TransitionToEnd();
     }
 }

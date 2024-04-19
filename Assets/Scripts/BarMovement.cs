@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class BarMovement : MonoBehaviour
 {
@@ -22,10 +23,15 @@ public class BarMovement : MonoBehaviour
     private TextManager textManager;
 
     TutorialScript tutorial;
+    GameTransitions transitions;
+
+    private float endMinigame = 2f;
 
     private void Awake()
     {
         textManager = FindObjectOfType<TextManager>();
+        transitions = FindObjectOfType<GameTransitions>();
+
         animator = GameObject.Find("Paws + Egg Sprite").GetComponent<Animator>(); 
 
         movePoints = new Transform[movement.transform.childCount];
@@ -58,6 +64,8 @@ public class BarMovement : MonoBehaviour
             {
                 isStopped = true;
                 CheckStoppingArea();
+                StartCoroutine(transitionWait());
+
             }
         }
     }
@@ -111,4 +119,13 @@ public class BarMovement : MonoBehaviour
 
         Debug.Log("Stopped over unknown area.");
     }
+
+    private IEnumerator transitionWait()
+    {
+        yield return new WaitForSecondsRealtime(endMinigame);
+        textManager.SetAllTextInactive();
+        
+        transitions.TransitionToSecondGame();
+    }
+
 }
