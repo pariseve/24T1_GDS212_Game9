@@ -1074,8 +1074,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 326499495}
-  - {fileID: 5881181}
   - {fileID: 555211567}
+  - {fileID: 5881181}
   - {fileID: 334547660}
   - {fileID: 1780527884}
   m_Father: {fileID: 0}
@@ -1377,6 +1377,10 @@ MonoBehaviour:
   scorePanel: {fileID: 334547659}
   transitionDuration: 3.5
   countdownText: {fileID: 555211568}
+  isFirstGameActive: 0
+  isSecondGameActive: 0
+  isThirdGameActive: 0
+  isGamePaused: 0
 --- !u!1 &458389813
 GameObject:
   m_ObjectHideFlags: 0

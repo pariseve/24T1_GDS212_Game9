@@ -22,7 +22,6 @@ public class BarMovement : MonoBehaviour
     private Animator animator;
     private TextManager textManager;
 
-    TutorialScript tutorial;
     GameTransitions transitions;
 
     private float endMinigame = 2f;

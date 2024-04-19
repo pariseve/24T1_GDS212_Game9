@@ -22,6 +22,10 @@ public class GameTransitions : MonoBehaviour
     private GameObject currentMiniGame; // Reference to the current mini-game GameObject
     private IEnumerator transitionCoroutine;
 
+    public bool isFirstGameActive = false;
+    public bool isSecondGameActive = false;
+    public bool isThirdGameActive = false;
+
 
     private void Start()
     {
@@ -29,15 +33,17 @@ public class GameTransitions : MonoBehaviour
     }
 
     // Call this method to transition to the first mini-game
-    // Call this method to transition to the first mini-game
     public void TransitionToFirstGame()
     {
-        if (transitionCoroutine != null)
-        {
-            StopCoroutine(transitionCoroutine); // Stop any ongoing transition
-        }
+            if (transitionCoroutine != null)
+            {
+                StopCoroutine(transitionCoroutine); // Stop any ongoing transition
+            }
+
+        isFirstGameActive = true;
         transitionCoroutine = Transition(firstPanel, firstMiniGame);
         StartCoroutine(transitionCoroutine);
+        
     }
 
 
@@ -50,6 +56,7 @@ public class GameTransitions : MonoBehaviour
         }
         transitionCoroutine = Transition(secondPanel, secondMiniGame);
         StartCoroutine(transitionCoroutine);
+        isSecondGameActive=true;
     }
 
     // Call this method to transition to the third mini-game
@@ -61,6 +68,7 @@ public class GameTransitions : MonoBehaviour
         }
         transitionCoroutine = Transition(thirdPanel, thirdMiniGame);
         StartCoroutine(transitionCoroutine);
+        isThirdGameActive=true;
     }
 
     public void TransitionToEnd()
@@ -73,8 +81,8 @@ public class GameTransitions : MonoBehaviour
         StartCoroutine(transitionCoroutine);
     }
 
+    public bool isGamePaused = false;
 
-    // Coroutine to handle the transition effect
     // Coroutine to handle the transition effect
     private IEnumerator Transition(GameObject transitionPanel, GameObject nextMiniGame)
     {
@@ -95,14 +103,29 @@ public class GameTransitions : MonoBehaviour
         currentMiniGame = nextMiniGame; // Update the current mini-game reference
 
         // Countdown before starting the next mini-game
-        int countdownDuration = 3;
+        // Countdown before starting the next mini-game
+        int countdownDuration = 3; // Set the initial countdown duration
         while (countdownDuration > 0)
         {
             Debug.Log("Countdown: " + countdownDuration);
             countdownText.text = countdownDuration.ToString(); // Update the UI text with the remaining time
-            yield return new WaitForSecondsRealtime(1f); // Wait for one second
-            countdownDuration--;
+
+            // Check if the game is paused
+            if (!isGamePaused)
+            {
+                yield return new WaitForSecondsRealtime(1f); // Wait for one second only if the game is not paused
+                countdownDuration--;
+            }
+            else
+            {
+                // If the game is paused, wait until it's unpaused
+                while (isGamePaused)
+                {
+                    yield return null;
+                }
+            }
         }
+
 
         // Reset the countdown text
         countdownText.text = "";
@@ -110,14 +133,16 @@ public class GameTransitions : MonoBehaviour
         ResumeGame();
     }
 
-
     private void PauseGame()
     {
+        isGamePaused = true;
         Time.timeScale = 0f;
     }
 
     private void ResumeGame()
     {
+        isGamePaused = false;
         Time.timeScale = 1f;
     }
+
 }
